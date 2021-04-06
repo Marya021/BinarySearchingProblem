@@ -1,0 +1,491 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "name": "Dicoding.ipynb",
+      "provenance": [],
+      "mount_file_id": "1RIOI8DMvVZ18DBThVX1vkiZKptXkplZO",
+      "authorship_tag": "ABX9TyM4J4/eLZZmXHxPxxfRImGO",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/Marya021/BinarySearchingProblem/blob/Marya/Model%20Decision%20Tree\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "wlJifeVNkC1W"
+      },
+      "source": [
+        "# **Latihan SKLearn Decision Tree**"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "T70cYr1ZkGn4"
+      },
+      "source": [
+        "# **Tahapan Latihan**\n",
+        "Dataset iris terdiri dari 4 atribut yaitu panjang sepal, lebar sepal, panjang petal, dan lebar petal. Terdapat 3 kelas target pada dataset ini. Data ini dipakai untuk masalah klasifikasi, di mana kita bisa memprediksi spesies dari sebuah bunga berdasarkan atribut-atribut yang diberikan.\n",
+        "\n",
+        "Tahapan yang ada pada latihan ini antara lain:\n",
+        "\n",
+        "*   Ubah dataset ke dalam dataframe.\n",
+        "*   Hapus kolom 'Id' pada dataframe dan pisahkan antara atribut dan label.\n",
+        "*   Buat dan latih model Decision Tree.\n",
+        "*   Lakukan prediksi dengan model yang telah dilatih\n",
+        "*   Visualisasi model Decision Tree yang telah dilatih.\n",
+        "\n"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "qgB9LRxmkkbW"
+      },
+      "source": [
+        "# **Codelab**\n",
+        "Pertama kita akan mengimpor library yang dibutuhkan dan mempersiapkan dataset. Dataset dapat anda unduh di tautan berikut. Setelah data diunduh, masukkan berkas **Iris.csv **ke dalam Watson Studio Notebook atau Colab. Lalu jangan lupa konversi dataset menjadi dataframe Pandas."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "M7toiF1WkhDm"
+      },
+      "source": [
+        "import pandas as pd\n",
+        "from sklearn.datasets import load_iris"
+      ],
+      "execution_count": 37,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "ORfVJEsblReG"
+      },
+      "source": [
+        "\n",
+        "> Membaca file iris.csv\n"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "swTqnPFCkCEz"
+      },
+      "source": [
+        "iris = pd.read_csv('Iris.csv')"
+      ],
+      "execution_count": 38,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 204
+        },
+        "id": "4xJcrr0wmWVq",
+        "outputId": "4d242389-0cb2-48d1-e581-72665bca2569"
+      },
+      "source": [
+        "#untuk melihat file dapat menggunakan head\n",
+        "iris.head()"
+      ],
+      "execution_count": 39,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/html": [
+              "<div>\n",
+              "<style scoped>\n",
+              "    .dataframe tbody tr th:only-of-type {\n",
+              "        vertical-align: middle;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe tbody tr th {\n",
+              "        vertical-align: top;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe thead th {\n",
+              "        text-align: right;\n",
+              "    }\n",
+              "</style>\n",
+              "<table border=\"1\" class=\"dataframe\">\n",
+              "  <thead>\n",
+              "    <tr style=\"text-align: right;\">\n",
+              "      <th></th>\n",
+              "      <th>Id</th>\n",
+              "      <th>SepalLengthCm</th>\n",
+              "      <th>SepalWidthCm</th>\n",
+              "      <th>PetalLengthCm</th>\n",
+              "      <th>PetalWidthCm</th>\n",
+              "      <th>Species</th>\n",
+              "    </tr>\n",
+              "  </thead>\n",
+              "  <tbody>\n",
+              "    <tr>\n",
+              "      <th>0</th>\n",
+              "      <td>1</td>\n",
+              "      <td>5.1</td>\n",
+              "      <td>3.5</td>\n",
+              "      <td>1.4</td>\n",
+              "      <td>0.2</td>\n",
+              "      <td>Iris-setosa</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>1</th>\n",
+              "      <td>2</td>\n",
+              "      <td>4.9</td>\n",
+              "      <td>3.0</td>\n",
+              "      <td>1.4</td>\n",
+              "      <td>0.2</td>\n",
+              "      <td>Iris-setosa</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>2</th>\n",
+              "      <td>3</td>\n",
+              "      <td>4.7</td>\n",
+              "      <td>3.2</td>\n",
+              "      <td>1.3</td>\n",
+              "      <td>0.2</td>\n",
+              "      <td>Iris-setosa</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>3</th>\n",
+              "      <td>4</td>\n",
+              "      <td>4.6</td>\n",
+              "      <td>3.1</td>\n",
+              "      <td>1.5</td>\n",
+              "      <td>0.2</td>\n",
+              "      <td>Iris-setosa</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>4</th>\n",
+              "      <td>5</td>\n",
+              "      <td>5.0</td>\n",
+              "      <td>3.6</td>\n",
+              "      <td>1.4</td>\n",
+              "      <td>0.2</td>\n",
+              "      <td>Iris-setosa</td>\n",
+              "    </tr>\n",
+              "  </tbody>\n",
+              "</table>\n",
+              "</div>"
+            ],
+            "text/plain": [
+              "   Id  SepalLengthCm  SepalWidthCm  PetalLengthCm  PetalWidthCm      Species\n",
+              "0   1            5.1           3.5            1.4           0.2  Iris-setosa\n",
+              "1   2            4.9           3.0            1.4           0.2  Iris-setosa\n",
+              "2   3            4.7           3.2            1.3           0.2  Iris-setosa\n",
+              "3   4            4.6           3.1            1.5           0.2  Iris-setosa\n",
+              "4   5            5.0           3.6            1.4           0.2  Iris-setosa"
+            ]
+          },
+          "metadata": {
+            "tags": []
+          },
+          "execution_count": 39
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "tBgINUZdnBAI"
+      },
+      "source": [
+        "#untuk menghilangkan kolom dapat menggunakan \"drop\" lalu beritahu axis berapa dan inplace True\n",
+        "#iris.drop('Id',axis=1, inplace=True)\n"
+      ],
+      "execution_count": 40,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 204
+        },
+        "id": "Yqx_ca0Ineht",
+        "outputId": "9df98f79-eca5-4880-e598-4143e99af00e"
+      },
+      "source": [
+        "iris.head()"
+      ],
+      "execution_count": 41,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/html": [
+              "<div>\n",
+              "<style scoped>\n",
+              "    .dataframe tbody tr th:only-of-type {\n",
+              "        vertical-align: middle;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe tbody tr th {\n",
+              "        vertical-align: top;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe thead th {\n",
+              "        text-align: right;\n",
+              "    }\n",
+              "</style>\n",
+              "<table border=\"1\" class=\"dataframe\">\n",
+              "  <thead>\n",
+              "    <tr style=\"text-align: right;\">\n",
+              "      <th></th>\n",
+              "      <th>Id</th>\n",
+              "      <th>SepalLengthCm</th>\n",
+              "      <th>SepalWidthCm</th>\n",
+              "      <th>PetalLengthCm</th>\n",
+              "      <th>PetalWidthCm</th>\n",
+              "      <th>Species</th>\n",
+              "    </tr>\n",
+              "  </thead>\n",
+              "  <tbody>\n",
+              "    <tr>\n",
+              "      <th>0</th>\n",
+              "      <td>1</td>\n",
+              "      <td>5.1</td>\n",
+              "      <td>3.5</td>\n",
+              "      <td>1.4</td>\n",
+              "      <td>0.2</td>\n",
+              "      <td>Iris-setosa</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>1</th>\n",
+              "      <td>2</td>\n",
+              "      <td>4.9</td>\n",
+              "      <td>3.0</td>\n",
+              "      <td>1.4</td>\n",
+              "      <td>0.2</td>\n",
+              "      <td>Iris-setosa</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>2</th>\n",
+              "      <td>3</td>\n",
+              "      <td>4.7</td>\n",
+              "      <td>3.2</td>\n",
+              "      <td>1.3</td>\n",
+              "      <td>0.2</td>\n",
+              "      <td>Iris-setosa</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>3</th>\n",
+              "      <td>4</td>\n",
+              "      <td>4.6</td>\n",
+              "      <td>3.1</td>\n",
+              "      <td>1.5</td>\n",
+              "      <td>0.2</td>\n",
+              "      <td>Iris-setosa</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>4</th>\n",
+              "      <td>5</td>\n",
+              "      <td>5.0</td>\n",
+              "      <td>3.6</td>\n",
+              "      <td>1.4</td>\n",
+              "      <td>0.2</td>\n",
+              "      <td>Iris-setosa</td>\n",
+              "    </tr>\n",
+              "  </tbody>\n",
+              "</table>\n",
+              "</div>"
+            ],
+            "text/plain": [
+              "   Id  SepalLengthCm  SepalWidthCm  PetalLengthCm  PetalWidthCm      Species\n",
+              "0   1            5.1           3.5            1.4           0.2  Iris-setosa\n",
+              "1   2            4.9           3.0            1.4           0.2  Iris-setosa\n",
+              "2   3            4.7           3.2            1.3           0.2  Iris-setosa\n",
+              "3   4            4.6           3.1            1.5           0.2  Iris-setosa\n",
+              "4   5            5.0           3.6            1.4           0.2  Iris-setosa"
+            ]
+          },
+          "metadata": {
+            "tags": []
+          },
+          "execution_count": 41
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "ta2hWNg2nm97"
+      },
+      "source": [
+        "Selanjutnya kita akan membuat sebuah model Decision Tree terlebih dahulu kita harus **memisahkan atribut**\n"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "urJPOseDnjSL"
+      },
+      "source": [
+        "#Memisahkan atribut [[\"\"]\n",
+        "x = iris [['SepalLengthCm',\t'SepalWidthCm',\t'PetalLengthCm', 'PetalWidthCm']]\n",
+        "y = iris [['Species']]"
+      ],
+      "execution_count": 42,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "b3xryPWQoR3B"
+      },
+      "source": [
+        "Kemudian buat model decision tree kita. Terakhir kita melatih model kita dengan menggunakan **fungsi fit()**"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "-gfh3uoYol24"
+      },
+      "source": [
+        "from sklearn.tree import DecisionTreeClassifier"
+      ],
+      "execution_count": 43,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "iUWA_ITrx3JW"
+      },
+      "source": [
+        "#membuat model decision tree\n",
+        "tree_model = DecisionTreeClassifier()"
+      ],
+      "execution_count": 44,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "UReabt3Sx-k0",
+        "outputId": "6944cf46-0455-47c3-a605-2c807976d9f7"
+      },
+      "source": [
+        "#Melakukan pelatihan model Decision Tree\n",
+        "tree_model.fit(x,y)"
+      ],
+      "execution_count": 45,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "DecisionTreeClassifier(ccp_alpha=0.0, class_weight=None, criterion='gini',\n",
+              "                       max_depth=None, max_features=None, max_leaf_nodes=None,\n",
+              "                       min_impurity_decrease=0.0, min_impurity_split=None,\n",
+              "                       min_samples_leaf=1, min_samples_split=2,\n",
+              "                       min_weight_fraction_leaf=0.0, presort='deprecated',\n",
+              "                       random_state=None, splitter='best')"
+            ]
+          },
+          "metadata": {
+            "tags": []
+          },
+          "execution_count": 45
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "PlVrJrB_yhUc"
+      },
+      "source": [
+        "Selanjutnya kita akan melakukan prediksi isi sebuah model dengan menggunakan **predict**"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "epkSRCf1yg2s",
+        "outputId": "84c704fe-a15f-4b05-ab58-0bc74bc21637"
+      },
+      "source": [
+        "tree_model.predict([[5.1,3.5,1.4,0.2]])"
+      ],
+      "execution_count": 46,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "array(['Iris-setosa'], dtype=object)"
+            ]
+          },
+          "metadata": {
+            "tags": []
+          },
+          "execution_count": 46
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "102C0hopzN8t"
+      },
+      "source": [
+        "Selanjutnya kita akan membuat sebuah visualisasi dari decision tree."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "O4NE4P0czsTB"
+      },
+      "source": [
+        "from sklearn.tree import export_graphviz\n",
+        "export_graphviz(\n",
+        "    tree_model,\n",
+        "    out_file = \"iris_tree.dot\",\n",
+        "    feature_names = ['SepalLengthCm', 'SepalWidthCm', 'PetalLengthCm', 'PetalWidthCm'],\n",
+        "    class_names = ['Iris-setosa', 'Iris-versicolor', 'Iris-virginica' ],\n",
+        "    rounded= True,\n",
+        "    filled =True\n",
+        ")"
+      ],
+      "execution_count": 48,
+      "outputs": []
+    }
+  ]
+}
